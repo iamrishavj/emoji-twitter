@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import CreatePostWizard from "~/components/CreatePostWizard";
 import TopNavBar from "~/components/Navbar";
+import PostView from "~/components/PostView";
 import SideBar from "~/components/SideBar";
 import SideProfile from "~/components/SideProfile";
 
@@ -24,10 +25,8 @@ export default function Home() {
           <CreatePostWizard />
           {/* Tweets */}
           <div>
-            {data?.map((post, index) => (
-              <div key={index} className="mb-4 rounded border bg-white p-4">
-                {post.content}
-              </div>
+            {data?.map((fullPost, index) => (
+              <PostView {...fullPost} key={index} />
             ))}
           </div>
         </div>
