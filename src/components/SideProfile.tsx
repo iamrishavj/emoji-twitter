@@ -1,9 +1,7 @@
-interface SideProfileProps {
-  user: UserInfo | null;
-  isSignedIn: Boolean;
-}
+import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
 
-export const SideProfileSkeleton = () => {
+const SideProfileSkeleton = () => {
   return (
     <div className="animate-pulse space-y-4 rounded-lg p-6 shadow-lg">
       <div className="mx-auto h-16 w-16 rounded-full bg-gray-300 md:h-32 md:w-32"></div>
@@ -13,27 +11,32 @@ export const SideProfileSkeleton = () => {
   );
 };
 
-const SideProfile: React.FC<SideProfileProps> = ({ isSignedIn, user }) => {
+const SideProfile = () => {
+  const { user, isSignedIn, isLoaded } = useUser();
+
+  if (!isLoaded || !isSignedIn || !user) {
+    return <SideProfileSkeleton />;
+  }
   return (
     <div className="bg-secondary space-y-4 rounded-lg p-6 shadow-lg">
-      {isSignedIn && user && (
-        <>
-          <div className="mb-4 flex flex-col items-center">
-            <img
-              src={user.imageUrl}
-              alt="Profile"
-              className="h-16 w-16 rounded-full object-cover shadow-md md:h-32 md:w-32"
-            />
-            <h2 className="mt-2 text-center text-lg font-semibold md:text-2xl">
-              {`@${user.userName}`}
-            </h2>
-            <div className="mt-2 text-center text-sm font-normal md:text-lg">
-              {user.firstName} {user.lastName}
-            </div>
-          </div>
-          {/* <SignOutButton /> */}
-        </>
-      )}
+      <div className="mb-4 flex flex-col items-center">
+        <div className="relative h-16 w-16 rounded-full object-cover shadow-md md:h-32 md:w-32">
+          <Image
+            src={user.imageUrl}
+            alt="Profile"
+            layout="fill"
+            objectFit="cover"
+            className="rounded-full"
+          />
+        </div>
+        <h2 className="mt-2 text-center text-lg font-semibold md:text-2xl">
+          {`@${user.username}`}
+        </h2>
+        <div className="mt-2 text-center text-sm font-normal md:text-lg">
+          {user.firstName} {user.lastName}
+        </div>
+      </div>
+      {/* <SignOutButton /> */}
       {/* {!isSignedIn && <SignInButton />} */}
     </div>
   );

@@ -4,14 +4,19 @@ import { api } from "~/utils/api";
 
 const CreatePostWizard: React.FC = () => {
   const [post, setPost] = useState("");
-  const { mutate, isLoading } = api.posts.create.useMutation();
+  const ctx = api.useContext();
+  const { mutate, isLoading } = api.posts.create.useMutation({
+    onSuccess: () => {
+      setPost("");
+      void ctx.posts.getAll.invalidate();
+    },
+  });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     mutate({
       content: post,
     });
-    setPost("");
   };
   /* Input for new tweet */
   return (

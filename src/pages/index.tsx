@@ -3,15 +3,14 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import { Feed } from "~/components/Feed";
 import { useUser } from "@clerk/nextjs";
-import { filterUserProps } from "~/utils/helpers";
 
 import CreatePostWizard from "~/components/CreatePostWizard";
 import TopNavBar from "~/components/Navbar";
 import SideBar from "~/components/SideBar";
-import SideProfile, { SideProfileSkeleton } from "~/components/SideProfile";
+import SideProfile from "~/components/SideProfile";
 
 export default function Home() {
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { isSignedIn } = useUser();
 
   api.posts.getAll.useQuery();
 
@@ -24,11 +23,7 @@ export default function Home() {
 
       <div className="flex">
         <div className="hidden w-1/4 p-4 md:block">
-          {isSignedIn && isLoaded ? (
-            <SideProfile isSignedIn={isSignedIn} user={filterUserProps(user)} />
-          ) : (
-            <SideProfileSkeleton />
-          )}
+          <SideProfile />
         </div>
 
         {/* Main Content */}
