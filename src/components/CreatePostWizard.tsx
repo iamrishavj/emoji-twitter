@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Loader } from "./Loader";
 import { api } from "~/utils/api";
+import toast from "react-hot-toast";
 
 const CreatePostWizard: React.FC = () => {
   const [post, setPost] = useState("");
@@ -10,10 +11,24 @@ const CreatePostWizard: React.FC = () => {
       setPost("");
       void ctx.posts.getAll.invalidate();
     },
+    onError: (e) => {
+      const errorMessage = e.data?.zodError?.fieldErrors.content;
+      if (errorMessage && errorMessage[0]) {
+        toast.error(errorMessage[0]);
+      } else {
+        toast.error("Something went wrong!");
+      }
+
+      setPost("");
+    },
   });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (post === "") {
+      toast.error("Empty Post!");
+      return;
+    }
     mutate({
       content: post,
     });
