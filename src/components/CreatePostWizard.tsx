@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { Loader } from "./Loader";
+import { api } from "~/utils/api";
 
 const CreatePostWizard: React.FC = () => {
   const [post, setPost] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutate, isLoading } = api.posts.create.useMutation();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsLoading(true);
-
+    mutate({
+      content: post,
+    });
     setPost("");
   };
   /* Input for new tweet */
