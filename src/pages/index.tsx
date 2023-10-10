@@ -1,15 +1,19 @@
 import Head from "next/head";
-import Link from "next/link";
-import CreatePostWizard from "~/components/CreatePostWizard";
-import TopNavBar from "~/components/Navbar";
-import PostView from "~/components/PostView";
-import SideBar from "~/components/SideBar";
-import SideProfile from "~/components/SideProfile";
 
 import { api } from "~/utils/api";
+import { Feed } from "~/components/Feed";
+import { useUser } from "@clerk/nextjs";
+import { filterUserProps } from "~/utils/helpers";
+
+import CreatePostWizard from "~/components/CreatePostWizard";
+import TopNavBar from "~/components/Navbar";
+import SideBar from "~/components/SideBar";
+import SideProfile, { SideProfileSkeleton } from "~/components/SideProfile";
 
 export default function Home() {
-  const { data, isLoading } = api.posts.getAll.useQuery();
+  const { isSignedIn, user, isLoaded } = useUser();
+
+  api.posts.getAll.useQuery();
 
   return (
     <div>
@@ -19,15 +23,20 @@ export default function Home() {
       <TopNavBar />
 
       <div className="flex">
-        <SideProfile />
+        <div className="hidden w-1/4 p-4 md:block">
+          {isSignedIn && isLoaded ? (
+            <SideProfile isSignedIn={isSignedIn} user={filterUserProps(user)} />
+          ) : (
+            <SideProfileSkeleton />
+          )}
+        </div>
+
         {/* Main Content */}
         <div className="flex-grow p-4 md:w-1/2 md:flex-grow-0">
-          <CreatePostWizard />
+          {isSignedIn && <CreatePostWizard />}
           {/* Tweets */}
           <div>
-            {data?.map((fullPost, index) => (
-              <PostView {...fullPost} key={index} />
-            ))}
+            <Feed />
           </div>
         </div>
         <div className="hidden md:block">

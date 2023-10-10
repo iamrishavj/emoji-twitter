@@ -23,3 +23,8 @@ body {
   background-color: var(--background);
   color: var(--text);
 }
+
+.navbar-gradient {
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  color: var(--text);
+}
