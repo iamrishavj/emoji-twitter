@@ -9,7 +9,7 @@ export const Feed = () => {
   }
   return (
     <>
-      {data?.map((fullPost, index) => (
+      {data?.map((fullPost) => (
         <PostView {...fullPost} key={fullPost.post.id} />
       ))}
     </>

@@ -12,9 +12,9 @@ const CreatePostWizard: React.FC = () => {
       void ctx.posts.getAll.invalidate();
     },
     onError: (e) => {
-      const errorMessage = e.data?.zodError?.fieldErrors.content;
-      if (errorMessage && errorMessage[0]) {
-        toast.error(errorMessage[0]);
+      const errorMessage = e.data?.zodError?.fieldErrors?.content?.[0];
+      if (errorMessage) {
+        toast.error(errorMessage);
       } else {
         toast.error("Something went wrong!");
       }
